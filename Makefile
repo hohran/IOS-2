@@ -11,7 +11,7 @@ OBJ = objFiles
 
 all: $(EXEC)
 
-proj2: mainProcess.o
+proj2: process.o
 	$(CC) $^ -o $@
 
 .PHONY: clean zip
