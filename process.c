@@ -8,5 +8,6 @@
 #include <sys/mman.h>
 
 int main() {
-    printf("Ahoj\n");
+    printf("Ahojky\n");
+    return 0;
 }
