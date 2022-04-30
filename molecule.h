@@ -18,8 +18,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-enum VAL {NO, NH, TI, TB, COUNT};    //COUNT je počet argumentů
-unsigned val[COUNT - 1];
+int NO, NH, TI, TB;
 
 /**
  * @brief Convert program argument to unsigned int
@@ -28,7 +27,7 @@ unsigned val[COUNT - 1];
  * @param val Adress of loaded number
  * @return int 0 for success, 1 for failure
  */
-int arg_to_uint(char* str, unsigned* val);
+int arg_to_int(char* str, int* val);
 
 #endif
 

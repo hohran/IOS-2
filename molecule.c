@@ -11,13 +11,14 @@
 
 #include "molecule.h"
 
-int arg_to_uint(char* str, unsigned* val) {
+int arg_to_int(char* str, int* val) {
     long new_val;
     char *p;
 
     new_val = strtol(str, &p, 10);
 
     if(errno != 0 || *p != 0 || new_val <= 0) {
+        fprintf(stderr, "process.c: Program argument must be a natural number\n");
         return 1;
     }
 
