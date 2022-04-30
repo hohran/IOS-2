@@ -14,6 +14,9 @@ all: $(EXEC)
 proj2: process.o molecule.o
 	$(CC) $^ -o $@
 
+%.o: %.c molecule.h
+	$(CC) -c $(CFLAGS) $<
+
 .PHONY: clean zip
 
 clean:
