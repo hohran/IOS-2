@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <errno.h>
 
-enum VAL {NO = 1, NH, TI, TB, SIZE};
-unsigned val[SIZE];
+enum VAL {NO, NH, TI, TB, COUNT};    //SIZE je počet argumentů
+unsigned val[COUNT - 1];
 
 
 int arg_to_int(char* str, unsigned* val);
