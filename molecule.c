@@ -1,11 +1,17 @@
-// Soubor: molecule.c
-// Autor: Jan Hranička
-// Projekt: IOS Projekt 2
-// Fakulta: FIT VUT
+
+/**
+ * @file molecule.c
+ * @author Jan Hranička
+ * @brief Functions for creating molecules
+ * @date 2022-04-30
+ * 
+ * FIT VUT
+ */
+
 
 #include "molecule.h"
 
-int arg_to_int(char* str, unsigned* val) {
+int arg_to_uint(char* str, unsigned* val) {
     long new_val;
     char *p;
 
