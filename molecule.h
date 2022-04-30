@@ -14,7 +14,9 @@
 #include <stdlib.h>
 #include <errno.h>
 
-unsigned NO, NH, TI, TB;
+enum VAL {NO = 1, NH, TI, TB, SIZE};
+unsigned val[SIZE];
+
 
 int arg_to_int(char* str, unsigned* val);
 
