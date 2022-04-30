@@ -3,11 +3,10 @@
 // Projekt: IOS Projekt 2
 // Fakulta: FIT VUT
 
-#include <stdio.h>
-#include <semaphore.h>
-#include <sys/mman.h>
+#include "molecule.h"
 
-int main() {
-    printf("Ahojky\n");
-    return 0;
+int main(int argc, char* argv[]) {
+    
+
+    
 }
