@@ -16,30 +16,14 @@ void hydrogen(int idO);
 
 int main(int argc, char* argv[]) {
     
-    if(argc != 5) {      //Název programu se počítá do argumentů programu
-        fprintf(stderr, "process.c: Program needs exactly 4 arguments (NO, NH, TI, TB)\n");
+    if(load_args(argc, argv)) {
         exit(1);
-    }       //Kontrola počtu argumentů programu
-
-
-    if(arg_to_int(argv[1], &NO)) { exit(1); }       //Kontrola načtení argumentu NO
-    if(arg_to_int(argv[2], &NH)) { exit(1); }       //Kontrola načtení argumentu NH
-    if(arg_to_int(argv[3], &TI)) { exit(1); }       //Kontrola načtení argumentu TI
-    if(arg_to_int(argv[4], &TB)) { exit(1); }       //Kontrola načtení argumentu TB
-
-    if(TI > 1000) {
-        fprintf(stderr, "process.c: Argument \'TI\' cannot be greater than 1000\n");
-        exit(1);
-    }       //Kontrola velikosti TI
-
-    if(TB > 1000) {
-        fprintf(stderr, "process.c: Argument \'TB\' cannot be greater than 1000\n");
-        exit(1);
-    }       //Kontrola velikosti TB
+    }
 
     setbuf(stdin, NULL);
 
-
+    line_count = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    sem_init(line_count, 1, 1);
 
     for(int i = 1; i <= NO; i++) {
 
@@ -73,6 +57,7 @@ void oxygen(int idO) {
 
 void hydrogen(int idH) {
     printf("H %d: started\n", idH);
+
 
     exit(0);
 }       //Proces vodíku
