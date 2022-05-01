@@ -144,7 +144,14 @@ int setup() {
             perror("setup");
             return 1;
         }
-        *noM = 1;
+        *noM = 0;
+
+    proc = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(proc == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+        *proc = 0;
 
     line_count = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
         if(line_count == MAP_FAILED) {
@@ -225,6 +232,8 @@ void cleanup() {
     UN_MAP(int, NO);
     UN_MAP(int, NH);
     UN_MAP(int, A);
+    UN_MAP(int, noM);
+    UN_MAP(int, proc);
     UN_MAP(sem_t, line_count);
     UN_MAP(sem_t, oxy_stop);
     UN_MAP(sem_t, hydro_stop);
@@ -235,4 +244,11 @@ void cleanup() {
     if(err) {
         exit(1);
     }
+}
+
+void mol_start() {
+    sem_wait(mol_inc);
+    *proc++;
+    *noM = *proc / 3;
+    sem_post(mol_inc);
 }

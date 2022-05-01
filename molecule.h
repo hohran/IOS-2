@@ -27,7 +27,8 @@ FILE* fp;
 
 int* A;
 
-int *noM;
+int* noM;
+int* proc;
 
 sem_t* line_count;
 sem_t* oxy_stop;
@@ -111,6 +112,12 @@ int setup();
  * 
  */
 void cleanup();
+
+/**
+ * @brief Starting process of creating molecule
+ * 
+ */
+void mol_start();
 
 
 #endif
