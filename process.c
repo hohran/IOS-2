@@ -14,12 +14,8 @@
 
 int main(int argc, char* argv[]) {
 
-    NO = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    NH = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    line_count = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    sem_init(line_count, 1, 1);
+    setup();
 
-    A = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     *A = 0;
     
     if(load_args(argc, argv)) {
@@ -35,6 +31,8 @@ int main(int argc, char* argv[]) {
     create_hydrogen(*NH);
     
     while(wait(NULL) > 0);      //Počkání na ukončení všech ostatních procesů
+
+    cleanup();
     printf("Konec\n");
 }
 
