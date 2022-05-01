@@ -87,6 +87,9 @@ void create_oxygen(int num);
  */
 void create_hydrogen(int num);
 
+
+void create(int num, void (*process)(id_t elem));
+
 /**
  * @brief The process of oxygen
  * 

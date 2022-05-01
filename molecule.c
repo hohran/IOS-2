@@ -117,6 +117,21 @@ void create_hydrogen(int num) {
     }
 }
 
+void create(int num, void (*process)(id_t elem)) {
+    
+    for(int i = 1; i <= num; i++) {
+
+        pid_t id = fork();
+        if(id == 0) {
+            process(i);
+        }
+        if(id == -1) {
+            perror("create");
+            exit(1);
+        }
+    }
+}
+
 
 int setup() {
 
