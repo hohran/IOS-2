@@ -19,6 +19,8 @@
 #include <errno.h>
 
 int NO, NH, TI, TB;
+FILE* fp;
+
 
 /**
  * @brief Convert program argument to unsigned int
@@ -28,6 +30,13 @@ int NO, NH, TI, TB;
  * @return int 0 for success, 1 for failure
  */
 int arg_to_int(char* str, int* val);
+
+/**
+ * @brief Sleep for <0, max> miliseconds
+ * 
+ * @param max maximal value of slept miliseconds
+ */
+void rand_sleep(int max);
 
 #endif
 

@@ -25,3 +25,7 @@ int arg_to_int(char* str, int* val) {
     *val = new_val;
     return 0;
 }
+
+void rand_sleep(int max) {
+    usleep( (rand() % (max + 1)) * 1000 );
+}
