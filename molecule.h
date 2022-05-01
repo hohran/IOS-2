@@ -28,14 +28,10 @@ FILE* fp;
 int* A;
 
 int* noM;
-int* proc;
 
 sem_t* line_count;
 sem_t* oxy_stop;
 sem_t* hydro_stop;
-sem_t* hydro_dec;
-sem_t* mol_inc;
-sem_t* signal;
 
 
 
@@ -112,12 +108,6 @@ int setup();
  * 
  */
 void cleanup();
-
-/**
- * @brief Starting process of creating molecule
- * 
- */
-void mol_start();
 
 
 #endif

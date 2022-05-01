@@ -14,12 +14,15 @@
 
 int main(int argc, char* argv[]) {
 
-    setup();
+    if(setup()) {
+        cleanup();
+        exit(1);
+    }
 
     *A = 0;
     
     if(load_args(argc, argv)) {
-        //unmap
+        cleanup();
         exit(1);
     }
 
@@ -42,7 +45,6 @@ void oxygen(id_t idO) {
     rand_sleep(TI);       //Uspání na <0,TI> milisekund
 
     print_report("O %d: going to queue\n", idO);
-
     
 
     exit(0);
@@ -54,6 +56,8 @@ void hydrogen(id_t idH) {
     rand_sleep(TI);       //Uspání na <0,TI> milisekund
 
     print_report("H %d: going to queue\n", idH);
+
+
 
 
     exit(0);

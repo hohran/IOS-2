@@ -119,100 +119,36 @@ void create_hydrogen(int num) {
 
 
 int setup() {
-    
-    NO = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(NO == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
 
-    NH = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(NH == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
+    #define DO_MAP(type, var) do {  \
+        var = mmap(NULL, sizeof(type), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);   \
+        if(var == MAP_FAILED) {     \
+            perror("setup");        \
+            return 1;               \
+        }       \
+    } while(0)
 
-    A = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(A == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
-        *A = 0;
+    #define DO_INIT(name, val) do { \
+        if(sem_init(name, 1, val) == -1) {  \
+            perror("setup");        \
+            return 2;               \
+        }   \
+    } while(0)
 
-    noM = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(noM == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
-        *noM = 0;
 
-    proc = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(proc == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
-        *proc = 0;
 
-    line_count = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(line_count == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
-        if(sem_init(line_count, 1, 1) == -1) {
-            perror("setup");
-            return 2;
-        }
-    
-    oxy_stop = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(oxy_stop == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
-        if(sem_init(oxy_stop, 1, 1) == -1) {
-            perror("setup");
-            return 2;
-        }
+    DO_MAP(int, NO);
+    DO_MAP(int, NH);
+    DO_MAP(int, A);
+    DO_MAP(int, noM);
 
-    hydro_stop = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(hydro_stop == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
-        if(sem_init(hydro_stop, 1, 2) == -1) {
-            perror("setup");
-            return 2;
-        }
+    DO_MAP(sem_t, line_count);
+    DO_MAP(sem_t, oxy_stop);
+    DO_MAP(sem_t, hydro_stop);
 
-    hydro_dec = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(hydro_dec == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
-        if(sem_init(hydro_dec, 1, 1) == -1) {
-            perror("setup");
-            return 2;
-        }
-
-    signal = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(signal == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
-        if(sem_init(signal, 1, 0) == -1) {
-            perror("setup");
-            return 2;
-        }
-
-    mol_inc = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-        if(mol_inc == MAP_FAILED) {
-            perror("setup");
-            return 1;
-        }
-        if(sem_init(mol_inc, 1, 1) == -1) {
-            perror("setup");
-            return 2;
-        }
-
+    DO_INIT(line_count, 1);
+    DO_INIT(oxy_stop, 1);
+    DO_INIT(hydro_stop, 2);
         
 
    return 0;
@@ -224,31 +160,23 @@ void cleanup() {
     
     int err = 0;
 
-    #define UN_MAP(type, var) do {          \
-        err += munmap(var, sizeof(type));   \
-        if(err) { perror("cleanup"); }      \
-    } while(0)
+    #define UN_MAP(type, var) err += munmap(var, sizeof(type))
+
+    #define DO_DESTROY(name) err += sem_destroy(name)
 
     UN_MAP(int, NO);
     UN_MAP(int, NH);
     UN_MAP(int, A);
     UN_MAP(int, noM);
-    UN_MAP(int, proc);
+
+    DO_DESTROY(line_count);
     UN_MAP(sem_t, line_count);
+    DO_DESTROY(oxy_stop);
     UN_MAP(sem_t, oxy_stop);
+    DO_DESTROY(hydro_stop);
     UN_MAP(sem_t, hydro_stop);
-    UN_MAP(sem_t, hydro_dec);
-    UN_MAP(sem_t, signal);
-    UN_MAP(sem_t, mol_inc);
 
     if(err) {
         exit(1);
     }
-}
-
-void mol_start() {
-    sem_wait(mol_inc);
-    *proc++;
-    *noM = *proc / 3;
-    sem_post(mol_inc);
 }
