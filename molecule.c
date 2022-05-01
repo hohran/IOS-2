@@ -139,6 +139,13 @@ int setup() {
         }
         *A = 0;
 
+    noM = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(noM == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+        *noM = 1;
+
     line_count = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
         if(line_count == MAP_FAILED) {
             perror("setup");
@@ -168,6 +175,37 @@ int setup() {
             perror("setup");
             return 2;
         }
+
+    hydro_dec = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(hydro_dec == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+        if(sem_init(hydro_dec, 1, 1) == -1) {
+            perror("setup");
+            return 2;
+        }
+
+    signal = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(signal == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+        if(sem_init(signal, 1, 0) == -1) {
+            perror("setup");
+            return 2;
+        }
+
+    mol_inc = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(mol_inc == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+        if(sem_init(mol_inc, 1, 1) == -1) {
+            perror("setup");
+            return 2;
+        }
+
         
 
    return 0;
@@ -190,6 +228,9 @@ void cleanup() {
     UN_MAP(sem_t, line_count);
     UN_MAP(sem_t, oxy_stop);
     UN_MAP(sem_t, hydro_stop);
+    UN_MAP(sem_t, hydro_dec);
+    UN_MAP(sem_t, signal);
+    UN_MAP(sem_t, mol_inc);
 
     if(err) {
         exit(1);
