@@ -141,14 +141,17 @@ int setup() {
     DO_MAP(int, NH);
     DO_MAP(int, A);
     DO_MAP(int, noM);
+    DO_MAP(int, pcount);
 
     DO_MAP(sem_t, line_count);
     DO_MAP(sem_t, oxy_stop);
     DO_MAP(sem_t, hydro_stop);
+    DO_MAP(sem_t, mol_inc);
 
     DO_INIT(line_count, 1);
     DO_INIT(oxy_stop, 1);
     DO_INIT(hydro_stop, 2);
+    DO_INIT(mol_inc, 1);
         
 
    return 0;
@@ -168,6 +171,9 @@ void cleanup() {
     UN_MAP(int, NH);
     UN_MAP(int, A);
     UN_MAP(int, noM);
+    UN_MAP(int, pcount);
+
+    DO_DESTROY(mol_inc);
 
     DO_DESTROY(line_count);
     UN_MAP(sem_t, line_count);
@@ -176,7 +182,16 @@ void cleanup() {
     DO_DESTROY(hydro_stop);
     UN_MAP(sem_t, hydro_stop);
 
+    UN_MAP(sem_t, mol_inc);
+
     if(err) {
         exit(1);
     }
+}
+
+void mol_start() {
+    sem_wait(mol_inc);
+    *noM = (*pcount / 3) + 1;
+    (*pcount)++;
+    sem_post(mol_inc);
 }
