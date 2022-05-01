@@ -20,7 +20,9 @@
 #include <stdarg.h>
 #include <time.h>
 
-int NO, NH, TI, TB;
+int *NO;
+int *NH;
+int TI, TB;
 FILE* fp;
 
 int* A;
@@ -43,7 +45,7 @@ int arg_to_int(char* str, int* val);
  * 
  * @param argc Number of arguments
  * @param argv Array of arguments
- * @return int 0 for success, value for failure
+ * @return int 0 for success, other value for failure
  */
 int load_args(int argc, char* argv[]);
 
@@ -54,8 +56,48 @@ int load_args(int argc, char* argv[]);
  */
 void rand_sleep(int max);
 
+/**
+ * @brief Print report accordingly to the task
+ * 
+ * @param mess String to be printed
+ * @param ... Other arguments (same as in printf)
+ */
 void print_report(const char *mess, ...);
 
+/**
+ * @brief Create oxygen processes
+ * 
+ * @param num Number of processes being made
+ */
+void create_oxygen(int num);
+
+/**
+ * @brief Create hydrogen processes
+ * 
+ * @param num Number of processes being made
+ */
+void create_hydrogen(int num);
+
+/**
+ * @brief The process of oxygen
+ * 
+ * @param idO ID of an specific oxygen
+ */
+void oxygen(id_t idO);
+
+/**
+ * @brief The process of hydrogen
+ * 
+ * @param idH ID of an specific hydrogen
+ */
+void hydrogen(id_t idH);
+
+/**
+ * @brief Setting up shared memory and initializing semaphores
+ * 
+ * @return int 0 for success, other value for failure
+ */
+int setup();
 
 
 #endif

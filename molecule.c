@@ -16,17 +16,15 @@
 
 
 int arg_to_int(char* str, int* val) {
-    long new_val;
     char *p;
 
-    new_val = strtol(str, &p, 10);
+    *val = strtol(str, &p, 10);
 
-    if(errno != 0 || *p != 0 || new_val <= 0) {
+    if(errno != 0 || *p != 0 || *val <= 0) {
         fprintf(stderr, "process.c: Program argument must be a natural number\n");
         return 1;
     }
-
-    *val = new_val;
+    
     return 0;
 }
 
@@ -38,9 +36,8 @@ int load_args(int argc, char* argv[]){
         return -1;
     }       //Kontrola počtu argumentů programu
 
-
-    if(arg_to_int(argv[1], &NO)) { return 1; }       //Kontrola načtení argumentu NO
-    if(arg_to_int(argv[2], &NH)) { return 1; }       //Kontrola načtení argumentu NH
+    if(arg_to_int(argv[1], NO)) { return 1; }       //Kontrola načtení argumentu NO
+    if(arg_to_int(argv[2], NH)) { return 1; }       //Kontrola načtení argumentu NH
     if(arg_to_int(argv[3], &TI)) { return 1; }       //Kontrola načtení argumentu TI
     if(arg_to_int(argv[4], &TB)) { return 1; }       //Kontrola načtení argumentu TB
 
@@ -67,7 +64,6 @@ void rand_sleep(int max) {
 
 
 
-
 void print_report(const char *mess, ...) {
 
     va_list pr_arg;
@@ -78,11 +74,45 @@ void print_report(const char *mess, ...) {
 
     (*A)++;
     printf("%d: ", *A);
-    
+
     vfprintf(stdout, mess, pr_arg);
 
     sem_post(line_count);
 
     va_end(pr_arg);
 
+}
+
+
+
+void create_oxygen(int num) {
+
+    for(int i = 1; i <= num; i++) {
+
+        pid_t id = fork();
+        if(id == 0) {
+            oxygen(i);
+        }
+        if(id == -1) {
+            perror("fork");
+            exit(1);
+        }
+    }
+}
+
+
+
+void create_hydrogen(int num) {
+
+    for(int i = 1; i <= num; i++) {
+
+        pid_t id = fork();
+        if(id == 0) {
+            hydrogen(i);
+        }
+        if(id == -1) {
+            perror("fork");
+            exit(1);
+        }
+    }
 }

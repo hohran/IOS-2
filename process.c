@@ -12,56 +12,50 @@
 #include <wait.h>
 
 
-void oxygen(int idO);
-void hydrogen(int idO);
-
 int main(int argc, char* argv[]) {
-    
-    if(load_args(argc, argv)) {
-        exit(1);
-    }
 
-    setbuf(stdout, NULL);
-
+    NO = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    NH = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     line_count = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     sem_init(line_count, 1, 1);
 
     A = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     *A = 0;
+    
+    if(load_args(argc, argv)) {
+        //unmap
+        exit(1);
+    }
 
-    for(int i = 1; i <= NO; i++) {
+    setbuf(stdout, NULL);
 
-        pid_t id = fork();
-        if(id == 0) {
-            oxygen(i);
-        }       //Potomek
-    }       //Vytvoření všech O
+    
 
-    for(int i = 1; i <= NH; i++) {
-
-        pid_t id = fork();
-        if(id == 0) {
-            hydrogen(i);
-        }       //Potomek
-    }       //Vytvoření všech H
+    create_oxygen(*NO);
+    create_hydrogen(*NH);
     
     while(wait(NULL) > 0);      //Počkání na ukončení všech ostatních procesů
     printf("Konec\n");
 }
 
-void oxygen(int idO) {
+void oxygen(id_t idO) {
     print_report("O %d: started\n", *A, idO);
 
     rand_sleep(TI);       //Uspání na <0,TI> milisekund
 
-    printf("O %d: going to queue\n", idO);
-    sem_post(line_count);
+    print_report("O %d: going to queue\n", idO);
+
+    
 
     exit(0);
 }       //Proces kyslíku
 
-void hydrogen(int idH) {
-    printf("H %d: started\n", idH);
+void hydrogen(id_t idH) {
+    print_report("H %d: started\n", idH);
+
+    rand_sleep(TI);       //Uspání na <0,TI> milisekund
+
+    print_report("H %d: going to queue\n", idH);
 
 
     exit(0);
