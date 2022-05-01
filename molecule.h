@@ -17,9 +17,16 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <stdarg.h>
 
 int NO, NH, TI, TB;
 FILE* fp;
+
+typedef struct semaphores
+{
+    sem_t* line_count;
+}sem_pack;
+
 
 
 /**
@@ -37,6 +44,10 @@ int arg_to_int(char* str, int* val);
  * @param max maximal value of slept miliseconds
  */
 void rand_sleep(int max);
+
+void print_report(const char *mess, ...);
+
+
 
 #endif
 

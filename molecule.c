@@ -29,3 +29,13 @@ int arg_to_int(char* str, int* val) {
 void rand_sleep(int max) {
     usleep( (rand() % (max + 1)) * 1000 );
 }
+
+void print_report(const char *mess, ...) {
+
+    va_list pr_arg;
+
+    va_start(pr_arg, mess);
+    vfprintf(stdin, mess, pr_arg);
+    va_end(pr_arg);
+    
+}
