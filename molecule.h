@@ -28,6 +28,8 @@ FILE* fp;
 int* A;
 
 sem_t* line_count;
+sem_t* oxy_stop;
+sem_t* hydro_stop;
 
 
 

@@ -94,7 +94,7 @@ void create_oxygen(int num) {
             oxygen(i);
         }
         if(id == -1) {
-            perror("fork");
+            perror("create_oxygen");
             exit(1);
         }
     }
@@ -111,8 +111,64 @@ void create_hydrogen(int num) {
             hydrogen(i);
         }
         if(id == -1) {
-            perror("fork");
+            perror("create_hydrogen");
             exit(1);
         }
     }
+}
+
+
+int setup() {
+    
+    NO = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(NO == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+
+    NH = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(NH == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+
+    A = mmap(NULL, sizeof(int), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(A == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+        *A = 0;
+
+    line_count = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(line_count == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+        if(sem_init(line_count, 1, 1) == -1) {
+            perror("setup");
+            return 2;
+        }
+    
+    oxy_stop = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(oxy_stop == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+        if(sem_init(oxy_stop, 1, 1) == -1) {
+            perror("setup");
+            return 2;
+        }
+
+    hydro_stop = mmap(NULL, sizeof(sem_t), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        if(hydro_stop == MAP_FAILED) {
+            perror("setup");
+            return 1;
+        }
+        if(sem_init(hydro_stop, 1, 2) == -1) {
+            perror("setup");
+            return 2;
+        }
+        
+
+   return 0;
 }
