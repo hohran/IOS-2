@@ -30,10 +30,13 @@ int* A;
 int* noM;
 int* pcount;
 
+int* mols;
+
 sem_t* line_count;
 sem_t* oxy_stop;
 sem_t* hydro_stop;
 sem_t* mol_inc;
+
 
 
 
@@ -116,6 +119,15 @@ void cleanup();
  * 
  */
 void mol_start();
+
+/**
+ * @brief Calculate how many molecules will be created
+ * 
+ * @param O number of oxygens
+ * @param H number of hydrogens
+ * @return int number of molecules
+ */
+int mol_count(int O, int H);
 
 
 #endif

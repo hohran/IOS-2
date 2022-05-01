@@ -142,6 +142,7 @@ int setup() {
     DO_MAP(int, A);
     DO_MAP(int, noM);
     DO_MAP(int, pcount);
+    DO_MAP(int, mols);
 
     DO_MAP(sem_t, line_count);
     DO_MAP(sem_t, oxy_stop);
@@ -172,6 +173,7 @@ void cleanup() {
     UN_MAP(int, A);
     UN_MAP(int, noM);
     UN_MAP(int, pcount);
+    UN_MAP(int, mols);
 
     DO_DESTROY(mol_inc);
 
@@ -194,4 +196,9 @@ void mol_start() {
     *noM = (*pcount / 3) + 1;
     (*pcount)++;
     sem_post(mol_inc);
+}
+
+int mol_count(int O, int H) {
+    if(2*O > H) return H/2;
+    else return O;
 }

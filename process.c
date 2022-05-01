@@ -28,7 +28,8 @@ int main(int argc, char* argv[]) {
 
     setbuf(stdout, NULL);
 
-    
+    *mols = mol_count(*NO, *NH);
+    printf("There will be %d water molecules\n\n\n", *mols);
 
     create_oxygen(*NO);
     create_hydrogen(*NH);
