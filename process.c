@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     while(wait(NULL) > 0);      //Počkání na ukončení všech ostatních procesů
 
     cleanup();
-    printf("Konec\n");
+    printf("\nKonec\n");
 }
 
 void oxygen(id_t idO) {
@@ -45,7 +45,19 @@ void oxygen(id_t idO) {
     rand_sleep(TI);       //Uspání na <0,TI> milisekund
 
     print_report("O %d: going to queue\n", idO);
+
+    sem_wait(oxy_stop);
+
+    mol_start();
+
+    printf("\tProces n. %d\n", *pcount);
+    printf("\tMol n. %d\n", *noM);
+
+
+
+    print_report("O %d: molecule created\n", idO);
     
+    sem_post(oxy_stop);
 
     exit(0);
 }       //Proces kyslíku
