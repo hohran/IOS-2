@@ -101,6 +101,12 @@ void hydrogen(id_t idH);
  */
 int setup();
 
+/**
+ * @brief Cleaning up after 'setup' function
+ * 
+ */
+void cleanup();
+
 
 #endif
 

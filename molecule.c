@@ -172,3 +172,26 @@ int setup() {
 
    return 0;
 }
+
+
+
+void cleanup() {
+    
+    int err = 0;
+
+    #define UN_MAP(type, var) do {          \
+        err += munmap(var, sizeof(type));   \
+        if(err) { perror("cleanup"); }      \
+    } while(0)
+
+    UN_MAP(int, NO);
+    UN_MAP(int, NH);
+    UN_MAP(int, A);
+    UN_MAP(sem_t, line_count);
+    UN_MAP(sem_t, oxy_stop);
+    UN_MAP(sem_t, hydro_stop);
+
+    if(err) {
+        exit(1);
+    }
+}
