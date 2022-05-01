@@ -23,6 +23,8 @@
 int NO, NH, TI, TB;
 FILE* fp;
 
+int* A;
+
 sem_t* line_count;
 
 

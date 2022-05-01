@@ -13,6 +13,8 @@
 
 
 
+
+
 int arg_to_int(char* str, int* val) {
     long new_val;
     char *p;
@@ -71,7 +73,16 @@ void print_report(const char *mess, ...) {
     va_list pr_arg;
 
     va_start(pr_arg, mess);
-    vfprintf(stdin, mess, pr_arg);
+
+    sem_wait(line_count);
+
+    (*A)++;
+    printf("%d: ", *A);
+    
+    vfprintf(stdout, mess, pr_arg);
+
+    sem_post(line_count);
+
     va_end(pr_arg);
 
 }
