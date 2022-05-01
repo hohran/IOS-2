@@ -18,14 +18,12 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <stdarg.h>
+#include <time.h>
 
 int NO, NH, TI, TB;
 FILE* fp;
 
-typedef struct semaphores
-{
-    sem_t* line_count;
-}sem_pack;
+sem_t* line_count;
 
 
 
@@ -37,6 +35,15 @@ typedef struct semaphores
  * @return int 0 for success, 1 for failure
  */
 int arg_to_int(char* str, int* val);
+
+/**
+ * @brief Load all arguments
+ * 
+ * @param argc Number of arguments
+ * @param argv Array of arguments
+ * @return int 0 for success, value for failure
+ */
+int load_args(int argc, char* argv[]);
 
 /**
  * @brief Sleep for <0, max> miliseconds
