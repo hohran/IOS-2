@@ -20,7 +20,7 @@ proj2: process.o molecule.o
 .PHONY: clean zip
 
 clean:
-	rm -f *.o
+	rm -f *.o proj2*
 
 zip:
 	zip proj2.zip *.c *.h Makefile

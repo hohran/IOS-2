@@ -73,9 +73,9 @@ void print_report(const char *mess, ...) {
     sem_wait(mutex_line);
 
     (*A)++;
-    printf("%d: ", *A);
+    fprintf(fp, "%d: ", *A);
 
-    vfprintf(stdout, mess, pr_arg);
+    vfprintf(fp, mess, pr_arg);
 
     sem_post(mutex_line);
 
@@ -85,37 +85,37 @@ void print_report(const char *mess, ...) {
 
 
 
-void create_oxygen(int num) {
+// void create_oxygen(int num) {
 
-    for(int i = 1; i <= num; i++) {
+//     for(int i = 1; i <= num; i++) {
 
-        pid_t id = fork();
-        if(id == 0) {
-            oxygen(i);
-        }
-        if(id == -1) {
-            perror("create_oxygen");
-            exit(1);
-        }
-    }
-}
+//         pid_t id = fork();
+//         if(id == 0) {
+//             oxygen(i);
+//         }
+//         if(id == -1) {
+//             perror("create_oxygen");
+//             exit(1);
+//         }
+//     }
+// }
 
 
 
-void create_hydrogen(int num) {
+// void create_hydrogen(int num) {
 
-    for(int i = 1; i <= num; i++) {
+//     for(int i = 1; i <= num; i++) {
 
-        pid_t id = fork();
-        if(id == 0) {
-            hydrogen(i);
-        }
-        if(id == -1) {
-            perror("create_hydrogen");
-            exit(1);
-        }
-    }
-}
+//         pid_t id = fork();
+//         if(id == 0) {
+//             hydrogen(i);
+//         }
+//         if(id == -1) {
+//             perror("create_hydrogen");
+//             exit(1);
+//         }
+//     }
+// }
 
 void create(int num, void (*process)(id_t elem)) {
     
@@ -135,6 +135,14 @@ void create(int num, void (*process)(id_t elem)) {
 
 int setup() {
 
+    fp = fopen("proj2.out", "w");
+    if(fp == NULL) {
+        perror("setup");
+        exit(1);
+    }
+
+    setbuf(fp, NULL);
+
     #define DO_MAP(type, var) do {  \
         var = mmap(NULL, sizeof(type), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);   \
         if(var == MAP_FAILED) {     \
@@ -149,7 +157,6 @@ int setup() {
             return 2;               \
         }   \
     } while(0)
-
 
 
     DO_MAP(int, NO);

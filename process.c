@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
     while(wait(NULL) > 0);      //Počkání na ukončení všech ostatních procesů
 
     cleanup();
-    printf("\nKonec\n");
+    exit(0);
 }
 
 void oxygen(id_t idO) {
