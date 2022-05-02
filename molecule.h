@@ -28,13 +28,14 @@ FILE* fp;
 int* A;
 
 int* noM;
-int* pcount;
 
 int* mols;
 
 sem_t* line_count;
-sem_t* oxy_stop;
-sem_t* hydro_stop;
+sem_t* oxy_start;
+sem_t* oxy_end;
+sem_t* hydro_start;
+sem_t* hydro_end;
 sem_t* mol_inc;
 
 

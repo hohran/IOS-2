@@ -156,17 +156,20 @@ int setup() {
     DO_MAP(int, NH);
     DO_MAP(int, A);
     DO_MAP(int, noM);
-    DO_MAP(int, pcount);
     DO_MAP(int, mols);
 
     DO_MAP(sem_t, line_count);
-    DO_MAP(sem_t, oxy_stop);
-    DO_MAP(sem_t, hydro_stop);
+    DO_MAP(sem_t, oxy_start);
+    DO_MAP(sem_t, oxy_end);
+    DO_MAP(sem_t, hydro_start);
+    DO_MAP(sem_t, hydro_end);
     DO_MAP(sem_t, mol_inc);
 
     DO_INIT(line_count, 1);
-    DO_INIT(oxy_stop, 1);
-    DO_INIT(hydro_stop, 2);
+    DO_INIT(oxy_start, 0);
+    DO_INIT(oxy_end, 0);
+    DO_INIT(hydro_start, 0);
+    DO_INIT(hydro_end, 0);
     DO_INIT(mol_inc, 1);
         
 
@@ -187,29 +190,31 @@ void cleanup() {
     UN_MAP(int, NH);
     UN_MAP(int, A);
     UN_MAP(int, noM);
-    UN_MAP(int, pcount);
     UN_MAP(int, mols);
 
+    DO_DESTROY(line_count);
+    DO_DESTROY(oxy_start);
+    DO_DESTROY(oxy_end);
+    DO_DESTROY(hydro_start);
+    DO_DESTROY(hydro_end);
     DO_DESTROY(mol_inc);
 
-    DO_DESTROY(line_count);
     UN_MAP(sem_t, line_count);
-    DO_DESTROY(oxy_stop);
-    UN_MAP(sem_t, oxy_stop);
-    DO_DESTROY(hydro_stop);
-    UN_MAP(sem_t, hydro_stop);
-
+    UN_MAP(sem_t, oxy_start);
+    UN_MAP(sem_t, oxy_end);
+    UN_MAP(sem_t, hydro_start);
+    UN_MAP(sem_t, hydro_end);
     UN_MAP(sem_t, mol_inc);
 
     if(err) {
+        perror("cleanup\n");
         exit(1);
     }
 }
 
 void mol_start() {
     sem_wait(mol_inc);
-    *noM = (*pcount / 3) + 1;
-    (*pcount)++;
+    (*noM)++;
     sem_post(mol_inc);
 }
 
