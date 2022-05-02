@@ -5,7 +5,7 @@
  * @file molecule.h
  * @author Jan Hranička
  * @brief process.c interface
- * @date 2022-02-05
+ * @date 2022-05-02
  * 
  * FIT VUT
  */

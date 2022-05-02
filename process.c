@@ -2,7 +2,7 @@
  * @file process.c
  * @author Jan Hranička
  * @brief Process of creating molecules
- * @date 2022-04-30
+ * @date 2022-05-02
  * 
  * FIT VUT
  */

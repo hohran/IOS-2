@@ -2,7 +2,7 @@
  * @file molecule.c
  * @author Jan Hranička
  * @brief Functions for creating molecules
- * @date 2022-04-30
+ * @date 2022-05-02
  * 
  * FIT VUT
  */
