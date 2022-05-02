@@ -33,16 +33,18 @@ int main(int argc, char* argv[]) {
     // create_oxygen(*NO);
     // create_hydrogen(*NH);
 
-    create(0, oxygen);        //Test for H
+    create(*NO, oxygen);        //Test for H
     create(*NH, hydrogen);
 
 
     for(int i = 0; i < *mols; i++) {
         mol_inc();
 
+        sem_post(oxy_start);
         sem_post(hydro_start);
         sem_post(hydro_start);
 
+        sem_post(oxy_end);
         sem_wait(hydro_end);
         sem_wait(hydro_end);
     }
@@ -74,6 +76,9 @@ void oxygen(id_t idO) {
 
     rand_sleep(TB);
 
+    sem_post(sigO);
+    sem_post(sigO);
+
     print_report("O %d: Molecule %d created\n", idO, *noM);
 
     sem_post(oxy_end);
@@ -99,7 +104,7 @@ void hydrogen(id_t idH) {
 
     print_report("H %d: creating molecule %d\n", idH, *noM);
 
-    rand_sleep(TB);
+    sem_wait(sigO);
 
     print_report("H %d: Molecule %d created\n", idH, *noM);
 
