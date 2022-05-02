@@ -29,10 +29,23 @@ int main(int argc, char* argv[]) {
     setbuf(stdout, NULL);
 
     *mols = mol_count(*NO, *NH);
-    printf("There will be %d water molecules\n\n\n", *mols);
 
-    create_oxygen(*NO);
-    create_hydrogen(*NH);
+    // create_oxygen(*NO);
+    // create_hydrogen(*NH);
+
+    create(*NO, oxygen);
+    create(0, hydrogen);        //Test for O
+
+
+    for(int i = 0; i < *mols; i++) {
+        mol_start();
+
+        sem_post(oxy_start);
+
+        sem_wait(oxy_end);
+    }
+
+    release();
     
     while(wait(NULL) > 0);      //Počkání na ukončení všech ostatních procesů
 
@@ -41,24 +54,29 @@ int main(int argc, char* argv[]) {
 }
 
 void oxygen(id_t idO) {
-    print_report("O %d: started\n", *A, idO);
+
+    print_report("O %d: started\n", idO);
 
     rand_sleep(TI);       //Uspání na <0,TI> milisekund
 
     print_report("O %d: going to queue\n", idO);
 
-    sem_wait(oxy_stop);
+    sem_wait(oxy_start);
 
-    mol_start();
+    if(*noM > *mols) {
+        print_report("O %d: not enough H\n", idO);
+        exit(0);
+    }
 
-    printf("\tProces n. %d\n", *pcount);
-    printf("\tMol n. %d\n", *noM);
+    print_report("O %d: creating molecule %d\n", idO, *noM);
+
+    rand_sleep(TB);
+
+    print_report("O %d: Molecule %d created\n", idO, *noM);
+
+    sem_post(oxy_end);
 
 
-
-    print_report("O %d: molecule created\n", idO);
-    
-    sem_post(oxy_stop);
 
     exit(0);
 }       //Proces kyslíku
