@@ -97,7 +97,12 @@ void create_oxygen(int num);
  */
 void create_hydrogen(int num);
 
-
+/**
+ * @brief Create multiple processes
+ * 
+ * @param num Number of processes being made
+ * @param process Function of the created process
+ */
 void create(int num, void (*process)(id_t elem));
 
 /**
