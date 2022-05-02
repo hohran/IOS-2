@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 
     cleanup();
     exit(0);        //Success YAY!
-}
+}       //The main process
 
 void oxygen(id_t idO) {
 
