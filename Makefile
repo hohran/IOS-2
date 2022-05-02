@@ -1,7 +1,8 @@
-# Soubor: Makefile
-# Autor: Jan Hranička
-# Projekt: IOS Projekt 2
-# Fakulta: FIT VUT
+# File: Makefile
+# Author: Jan Hranička
+# Project: IOS Projekt 2
+# Date: 2. 5. 2022
+# FIT VUT
 
 CC = gcc
 CFLAGS = -std=gnu99 -Wall -Wextra -Werror -pedantic
