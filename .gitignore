@@ -1,4 +1,4 @@
 *.o
 proj2*
 *.zip
-/test
+*test*
