@@ -1,4 +1,3 @@
-
 /**
  * @file molecule.c
  * @author Jan Hranička
@@ -13,22 +12,20 @@
 
 
 
-
-
-int arg_to_int(char* str, int* val) {
-    char *p;
+int str_to_int(char* str, int* val) {
+    char *p;        //Storage of excess characters
 
     if(str[0] == '\0') { 
-        fprintf(stderr, "arg_to_int: Program argument must be specified\n");
+        fprintf(stderr, "str_to_int: Program argument must be specified\n");
         return -1; 
-    }
+    }               //Empty argument
 
     *val = strtol(str, &p, 10);
 
     if(errno != 0 || *p != 0 || *val < 0) {
-        fprintf(stderr, "arg_to_int: Program argument must be a natural number\n");
+        fprintf(stderr, "str_to_int: Program argument must be a natural number\n");
         return 1;
-    }
+    }               //Failure of strtol or non digit characters in str
     
     return 0;
 }
@@ -36,35 +33,35 @@ int arg_to_int(char* str, int* val) {
 
 
 int load_args(int argc, char* argv[]){
-    if(argc != 5) {      //Název programu se počítá do argumentů programu
+    if(argc != 5) {      //Program name counts as an argument
         fprintf(stderr, "load_args: Program needs exactly 4 arguments (NO, NH, TI, TB)\n");
         return -1;
-    }       //Kontrola počtu argumentů programu
+    }       //Check if we have the correct number of arguments
 
-    if(arg_to_int(argv[1], NO)) { return 1; }       //Kontrola načtení argumentu NO
-    if(arg_to_int(argv[2], NH)) { return 1; }       //Kontrola načtení argumentu NH
-    if(arg_to_int(argv[3], &TI)) { return 1; }       //Kontrola načtení argumentu TI
-    if(arg_to_int(argv[4], &TB)) { return 1; }       //Kontrola načtení argumentu TB
+    if(str_to_int(argv[1], NO)) { return 1; }       //Check if NO is loaded correctly
+    if(str_to_int(argv[2], NH)) { return 1; }       //Check if NH is loaded correctly
+    if(str_to_int(argv[3], &TI)) { return 1; }       //Check if TI is loaded correctly
+    if(str_to_int(argv[4], &TB)) { return 1; }       //Check if TB is loaded correctly
 
     if(*NO == 0) {
         fprintf(stderr, "load_args: Argument \'NO\' cannot be 0 (specified on forum)\n");
         return 2;
-    }
+    }               //There is no sense in having 0 oxygens
 
     if(*NH == 0) {
         fprintf(stderr, "load_args: Argument \'NH\' cannot be 0 (specified on forum)\n");
         return 2; 
-    }
+    }               //There is no sense in having 0 hydrogens
 
     if(TI > 1000) {
         fprintf(stderr, "load_args: Argument \'TI\' cannot be greater than 1000\n");
         return 2;
-    }       //Kontrola velikosti TI
+    }               //Too large TI
 
     if(TB > 1000) {
         fprintf(stderr, "load_args: Argument \'TB\' cannot be greater than 1000\n");
         return 2;
-    }       //Kontrola velikosti TB
+    }               //Too large TB
 
     return 0;
 }
@@ -82,15 +79,14 @@ void rand_sleep(int max) {
 void print_report(const char *mess, ...) {
 
     va_list pr_arg;
-
-    va_start(pr_arg, mess);
+    va_start(pr_arg, mess);         //Arguments start with mess
 
     sem_wait(mutex_line);
 
     (*A)++;
     fprintf(fp, "%d: ", *A);
 
-    vfprintf(fp, mess, pr_arg);
+    vfprintf(fp, mess, pr_arg);             //Printing to fp
 
     sem_post(mutex_line);
 
@@ -105,24 +101,24 @@ void create(int num, void (*process)(id_t elem)) {
         pid_t id = fork();
         if(id == 0) {
             process(i);
-        }
+        }                                   //Child process
         if(id == -1) {
             perror("create");
             exit(1);
-        }
-    }
+        }                                   //Unwanted child process
+    }                           //Do this (num)times
 }
 
 
 int setup() {
 
-    fp = fopen("proj2.out", "w");
+    fp = fopen("proj2.out", "w");           //Filename from the task
     if(fp == NULL) {
         perror("setup");
         exit(1);
-    }
+    }                               //If fopen failed
 
-    setbuf(fp, NULL);
+    setbuf(fp, NULL);               //Stops prints to this file from buffering (to keep the correct order)
     
 
     #define DO_MAP(type, var) do {  \
@@ -131,14 +127,14 @@ int setup() {
             perror("setup");        \
             return 1;               \
         }       \
-    } while(0)
+    } while(0)                      //Same process for all the mmapping
 
     #define DO_INIT(name, val) do { \
         if(sem_init(name, 1, val) == -1) {  \
             perror("setup");        \
             return 2;               \
         }   \
-    } while(0)
+    } while(0)                      //Same process for initializing all the semaphores
 
 
     DO_MAP(int, NO);
@@ -206,7 +202,7 @@ void cleanup() {
     if(err) {
         perror("cleanup\n");
         exit(1);
-    }
+    }       //If any of the functions failed
 }
 
 void mol_inc() {
@@ -222,19 +218,18 @@ int mol_count(int O, int H) {
 
 void release() {
 
+    int excess_oxy = *NO - *noM;            //Count oxygens that won't be part of a molecule
+    int excess_hydro = *NH - 2*(*noM);      //Count hydrogens that won't be part of a molecule
 
-    int excess_oxy = *NO - *noM;
-    int excess_hydro = *NH - 2*(*noM);
-
-    mol_inc();
+    mol_inc();              //Increment noM so that the following molocule processes will fail
 
     for(int i = 0; i < excess_oxy; i++) {
         sem_post(oxy_start);
-    }
+    }                       //Release all oxygens
 
     for(int i = 0; i < excess_hydro; i++) {
         sem_post(hydro_start);
-    }
+    }                       //Release all oxygens
 
 }
 
