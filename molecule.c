@@ -229,7 +229,7 @@ void release() {
     int excess_oxy = *NO - *noM;
     int excess_hydro = *NH - 2*(*noM);
 
-    mol_start();
+    mol_inc();
 
     for(int i = 0; i < excess_oxy; i++) {
         sem_post(oxy_start);

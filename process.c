@@ -33,16 +33,18 @@ int main(int argc, char* argv[]) {
     // create_oxygen(*NO);
     // create_hydrogen(*NH);
 
-    create(*NO, oxygen);
-    create(0, hydrogen);        //Test for O
+    create(0, oxygen);        //Test for H
+    create(*NH, hydrogen);
 
 
     for(int i = 0; i < *mols; i++) {
-        mol_start();
+        mol_inc();
 
-        sem_post(oxy_start);
+        sem_post(hydro_start);
+        sem_post(hydro_start);
 
-        sem_wait(oxy_end);
+        sem_wait(hydro_end);
+        sem_wait(hydro_end);
     }
 
     release();
@@ -87,6 +89,21 @@ void hydrogen(id_t idH) {
     rand_sleep(TI);       //Uspání na <0,TI> milisekund
 
     print_report("H %d: going to queue\n", idH);
+
+    sem_wait(hydro_start);
+
+    if(*noM > *mols) {
+        print_report("H %d: not enough O or H\n", idH);
+        exit(0);
+    }
+
+    print_report("H %d: creating molecule %d\n", idH, *noM);
+
+    rand_sleep(TB);
+
+    print_report("H %d: Molecule %d created\n", idH, *noM);
+
+    sem_post(hydro_end);
 
 
 
