@@ -51,19 +51,19 @@ sem_t* sigH;            /* Oxygen is prepared for creating molecule */
 
 
 /**
- * @brief Convert program argument to unsigned int
+ * @brief Convert program argument to natural number
  * 
  * @param str String to convert from
  * @param val Adress of loaded number
  * @return int 0 for success, 1 for failure
  */
-int arg_to_int(char* str, int* val);
+int str_to_int(char* str, int* val);
 
 /**
  * @brief Load all arguments
  * 
  * @param argc Number of arguments
- * @param argv Array of arguments
+ * @param argv Array of the arguments
  * @return int 0 for success, other value for failure
  */
 int load_args(int argc, char* argv[]);
