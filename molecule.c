@@ -18,10 +18,15 @@
 int arg_to_int(char* str, int* val) {
     char *p;
 
+    if(str[0] == '\0') { 
+        fprintf(stderr, "arg_to_int: Program argument must be specified\n");
+        return -1; 
+    }
+
     *val = strtol(str, &p, 10);
 
-    if(errno != 0 || *p != 0 || *val <= 0) {
-        fprintf(stderr, "process.c: Program argument must be a natural number\n");
+    if(errno != 0 || *p != 0 || *val < 0) {
+        fprintf(stderr, "arg_to_int: Program argument must be a natural number\n");
         return 1;
     }
     
@@ -32,7 +37,7 @@ int arg_to_int(char* str, int* val) {
 
 int load_args(int argc, char* argv[]){
     if(argc != 5) {      //Název programu se počítá do argumentů programu
-        fprintf(stderr, "process.c: Program needs exactly 4 arguments (NO, NH, TI, TB)\n");
+        fprintf(stderr, "load_args: Program needs exactly 4 arguments (NO, NH, TI, TB)\n");
         return -1;
     }       //Kontrola počtu argumentů programu
 
@@ -41,13 +46,23 @@ int load_args(int argc, char* argv[]){
     if(arg_to_int(argv[3], &TI)) { return 1; }       //Kontrola načtení argumentu TI
     if(arg_to_int(argv[4], &TB)) { return 1; }       //Kontrola načtení argumentu TB
 
+    if(*NO == 0) {
+        fprintf(stderr, "load_args: Argument \'NO\' cannot be 0 (specified on forum)\n");
+        return 2;
+    }
+
+    if(*NH == 0) {
+        fprintf(stderr, "load_args: Argument \'NH\' cannot be 0 (specified on forum)\n");
+        return 2; 
+    }
+
     if(TI > 1000) {
-        fprintf(stderr, "process.c: Argument \'TI\' cannot be greater than 1000\n");
+        fprintf(stderr, "load_args: Argument \'TI\' cannot be greater than 1000\n");
         return 2;
     }       //Kontrola velikosti TI
 
     if(TB > 1000) {
-        fprintf(stderr, "process.c: Argument \'TB\' cannot be greater than 1000\n");
+        fprintf(stderr, "load_args: Argument \'TB\' cannot be greater than 1000\n");
         return 2;
     }       //Kontrola velikosti TB
 
@@ -138,6 +153,7 @@ int setup() {
     DO_MAP(sem_t, hydro_end);
     DO_MAP(sem_t, mutex_mol);
     DO_MAP(sem_t, sigO);
+    DO_MAP(sem_t, sigH);
 
     DO_INIT(mutex_line, 1);
     DO_INIT(oxy_start, 0);
@@ -146,6 +162,7 @@ int setup() {
     DO_INIT(hydro_end, 0);
     DO_INIT(mutex_mol, 1);
     DO_INIT(sigO, 0);
+    DO_INIT(sigH, 0);
         
 
    return 0;
@@ -174,6 +191,7 @@ void cleanup() {
     DO_DESTROY(hydro_end);
     DO_DESTROY(mutex_mol);
     DO_DESTROY(sigO);
+    DO_DESTROY(sigH);
 
     UN_MAP(sem_t, mutex_line);
     UN_MAP(sem_t, oxy_start);
@@ -182,6 +200,7 @@ void cleanup() {
     UN_MAP(sem_t, hydro_end);
     UN_MAP(sem_t, mutex_mol);
     UN_MAP(sem_t, sigO);
+    UN_MAP(sem_t, sigH);
 
     if(err) {
         perror("cleanup\n");
@@ -216,4 +235,16 @@ void release() {
         sem_post(hydro_start);
     }
 
+}
+
+void merge_mol() {
+    mol_inc();
+
+    sem_post(oxy_start);
+    sem_post(hydro_start);
+    sem_post(hydro_start);
+
+    sem_post(oxy_end);
+    sem_wait(hydro_end);
+    sem_wait(hydro_end);
 }

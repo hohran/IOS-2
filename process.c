@@ -24,8 +24,6 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    setbuf(stdout, NULL);
-
     *mols = mol_count(*NO, *NH);
 
     create(*NO, oxygen);        //Test for H
@@ -33,15 +31,7 @@ int main(int argc, char* argv[]) {
 
 
     for(int i = 0; i < *mols; i++) {
-        mol_inc();
-
-        sem_post(oxy_start);
-        sem_post(hydro_start);
-        sem_post(hydro_start);
-
-        sem_post(oxy_end);
-        sem_wait(hydro_end);
-        sem_wait(hydro_end);
+        merge_mol();
     }
 
     release();
@@ -71,6 +61,9 @@ void oxygen(id_t idO) {
 
     rand_sleep(TB);
 
+    sem_wait(sigH);
+    sem_wait(sigH);
+
     sem_post(sigO);
     sem_post(sigO);
 
@@ -96,6 +89,8 @@ void hydrogen(id_t idH) {
     }
 
     print_report("H %d: creating molecule %d\n", idH, *noM);
+
+    sem_post(sigH);
 
     sem_wait(sigO);
 

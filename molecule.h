@@ -39,6 +39,7 @@ sem_t* hydro_end;
 sem_t* mutex_mol;
 
 sem_t* sigO;
+sem_t* sigH;
 
 
 /**
@@ -117,6 +118,12 @@ int setup();
  * 
  */
 void cleanup();
+
+/**
+ * @brief Merges element processes into a molecule
+ * 
+ */
+void merge_mol();
 
 /**
  * @brief Starting process of creating molecule
