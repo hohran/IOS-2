@@ -104,6 +104,7 @@ void create(int num, void (*process)(id_t elem)) {
         }                                   //Child process
         if(id == -1) {
             perror("create");
+            cleanup();
             exit(1);
         }                                   //Unwanted child process
     }                           //Do this (num)times
@@ -198,6 +199,8 @@ void cleanup() {
     UN_MAP(sem_t, mutex_mol);
     UN_MAP(sem_t, sigO);
     UN_MAP(sem_t, sigH);
+
+    err += fclose(fp);
 
     if(err) {
         perror("cleanup\n");
