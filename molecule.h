@@ -38,6 +38,8 @@ sem_t* hydro_start;
 sem_t* hydro_end;
 sem_t* mutex_mol;
 
+sem_t* sigO;
+
 
 /**
  * @brief Convert program argument to unsigned int

@@ -164,6 +164,7 @@ int setup() {
     DO_MAP(sem_t, hydro_start);
     DO_MAP(sem_t, hydro_end);
     DO_MAP(sem_t, mutex_mol);
+    DO_MAP(sem_t, sigO);
 
     DO_INIT(mutex_line, 1);
     DO_INIT(oxy_start, 0);
@@ -171,6 +172,7 @@ int setup() {
     DO_INIT(hydro_start, 0);
     DO_INIT(hydro_end, 0);
     DO_INIT(mutex_mol, 1);
+    DO_INIT(sigO, 0);
         
 
    return 0;
@@ -198,6 +200,7 @@ void cleanup() {
     DO_DESTROY(hydro_start);
     DO_DESTROY(hydro_end);
     DO_DESTROY(mutex_mol);
+    DO_DESTROY(sigO);
 
     UN_MAP(sem_t, mutex_line);
     UN_MAP(sem_t, oxy_start);
@@ -205,6 +208,7 @@ void cleanup() {
     UN_MAP(sem_t, hydro_start);
     UN_MAP(sem_t, hydro_end);
     UN_MAP(sem_t, mutex_mol);
+    UN_MAP(sem_t, sigO);
 
     if(err) {
         perror("cleanup\n");
