@@ -4,7 +4,7 @@
 # Fakulta: FIT VUT
 
 CC = gcc
-CFLAGS = -pthread -std=gnu99 -Wall -Wextra -Werror -pedantic
+CFLAGS = -std=gnu99 -Wall -Wextra -Werror -pedantic
 LDFLAGS =
 EXEC = proj2
 OBJ = objFiles
