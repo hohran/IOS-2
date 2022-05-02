@@ -74,7 +74,7 @@ void oxygen(id_t idO) {
     sem_post(sigO);
     sem_post(sigO);
 
-    print_report("O %d: Molecule %d created\n", idO, *noM);
+    print_report("O %d: molecule %d created\n", idO, *noM);
 
     sem_post(oxy_end);
 
@@ -99,7 +99,7 @@ void hydrogen(id_t idH) {
 
     sem_wait(sigO);
 
-    print_report("H %d: Molecule %d created\n", idH, *noM);
+    print_report("H %d: molecule %d created\n", idH, *noM);
 
     sem_post(hydro_end);
 
