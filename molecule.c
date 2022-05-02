@@ -123,6 +123,7 @@ int setup() {
     }
 
     setbuf(fp, NULL);
+    
 
     #define DO_MAP(type, var) do {  \
         var = mmap(NULL, sizeof(type), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);   \

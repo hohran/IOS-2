@@ -8,8 +8,8 @@
  * FIT VUT
  */
 
-#include "molecule.h"
-#include <wait.h>
+#include "molecule.h"       //Custom library
+#include <wait.h>           //wait()
 
 
 int main(int argc, char* argv[]) {
@@ -17,16 +17,16 @@ int main(int argc, char* argv[]) {
     if(setup()) {
         cleanup();
         exit(1);
-    }
+    }       //If setup failed there's no need to continue
     
     if(load_args(argc, argv)) {
         cleanup();
         exit(1);
-    }
+    }       //If loading arguments failed there's no need to continue
 
     *mols = mol_count(*NO, *NH);
 
-    create(*NO, oxygen);        //Test for H
+    create(*NO, oxygen);
     create(*NH, hydrogen);
 
 

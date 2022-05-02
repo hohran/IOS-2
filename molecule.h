@@ -5,41 +5,49 @@
  * @file molecule.h
  * @author Jan Hranička
  * @brief process.c interface
- * @date 2022-04-30
+ * @date 2022-02-05
  * 
  * FIT VUT
  */
 
-#include <stdio.h>
-#include <semaphore.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <stdarg.h>
-#include <time.h>
+#include <stdio.h>          //Working with files and prints
+#include <semaphore.h>      //Semaphores
+#include <sys/mman.h>       //Shared memory
+#include <sys/types.h>      //fork()
+#include <unistd.h>         //fork() and usleep()
+#include <stdlib.h>         //Rand and strtol()
+#include <errno.h>          //Errno and perror
+#include <stdarg.h>         //Custom args in print_report()
+#include <time.h>           //Randomness in rand_sleep()
 
-int *NO;
-int *NH;
-int TI, TB;
-FILE* fp;
 
-int* A;
+int *NO;    /* Number of oxygens */
+int *NH;    /* Number of hydrogens */
+int TI;     /* Max time for elements before going to queue */
+int TB;     /* Max time for elements before creating molecule */
 
-int* noM;
+FILE* fp;   /* File for printing reports */
 
-int* mols;
+int* A;     /* Line counter */
 
-sem_t* mutex_line;
-sem_t* oxy_start;
-sem_t* oxy_end;
-sem_t* hydro_start;
-sem_t* hydro_end;
-sem_t* mutex_mol;
+int* noM;   /* Counter of created molecules */
 
-sem_t* sigO;
-sem_t* sigH;
+int* mols;  /* Precalculated number of molecules */
+
+
+/* Value incrementation */
+sem_t* mutex_line;      /* For incrementing A */
+sem_t* mutex_mol;       /* For incrementing noM */
+
+/* Main process -- Element process */
+sem_t* oxy_start;       /* Oxygen started creating molecule */
+sem_t* oxy_end;         /* Oxygen ended creating molecule */
+sem_t* hydro_start;     /* Hydrogen started creating molecule */
+sem_t* hydro_end;       /* Hydrogen ended creating molecule */
+
+/* Element process -- Element process */
+sem_t* sigO;            /* Oxygen is prepared for creating molecule */
+sem_t* sigH;            /* Oxygen is prepared for creating molecule */
 
 
 /**
@@ -149,4 +157,4 @@ void release();
 
 #endif
 
-/*** Konec souboru molecule.h ***/
+/*** End of file molecule.h ***/
