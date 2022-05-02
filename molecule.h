@@ -31,14 +31,12 @@ int* noM;
 
 int* mols;
 
-sem_t* line_count;
+sem_t* mutex_line;
 sem_t* oxy_start;
 sem_t* oxy_end;
 sem_t* hydro_start;
 sem_t* hydro_end;
-sem_t* mol_inc;
-
-
+sem_t* mutex_mol;
 
 
 /**
@@ -122,7 +120,7 @@ void cleanup();
  * @brief Starting process of creating molecule
  * 
  */
-void mol_start();
+void mol_inc();
 
 /**
  * @brief Calculate how many molecules will be created
@@ -132,6 +130,12 @@ void mol_start();
  * @return int number of molecules
  */
 int mol_count(int O, int H);
+
+/**
+ * @brief Releases atoms that cannot create molecule
+ * 
+ */
+void release();
 
 
 #endif

@@ -70,14 +70,14 @@ void print_report(const char *mess, ...) {
 
     va_start(pr_arg, mess);
 
-    sem_wait(line_count);
+    sem_wait(mutex_line);
 
     (*A)++;
     printf("%d: ", *A);
 
     vfprintf(stdout, mess, pr_arg);
 
-    sem_post(line_count);
+    sem_post(mutex_line);
 
     va_end(pr_arg);
 
@@ -158,19 +158,19 @@ int setup() {
     DO_MAP(int, noM);
     DO_MAP(int, mols);
 
-    DO_MAP(sem_t, line_count);
+    DO_MAP(sem_t, mutex_line);
     DO_MAP(sem_t, oxy_start);
     DO_MAP(sem_t, oxy_end);
     DO_MAP(sem_t, hydro_start);
     DO_MAP(sem_t, hydro_end);
-    DO_MAP(sem_t, mol_inc);
+    DO_MAP(sem_t, mutex_mol);
 
-    DO_INIT(line_count, 1);
+    DO_INIT(mutex_line, 1);
     DO_INIT(oxy_start, 0);
     DO_INIT(oxy_end, 0);
     DO_INIT(hydro_start, 0);
     DO_INIT(hydro_end, 0);
-    DO_INIT(mol_inc, 1);
+    DO_INIT(mutex_mol, 1);
         
 
    return 0;
@@ -192,19 +192,19 @@ void cleanup() {
     UN_MAP(int, noM);
     UN_MAP(int, mols);
 
-    DO_DESTROY(line_count);
+    DO_DESTROY(mutex_line);
     DO_DESTROY(oxy_start);
     DO_DESTROY(oxy_end);
     DO_DESTROY(hydro_start);
     DO_DESTROY(hydro_end);
-    DO_DESTROY(mol_inc);
+    DO_DESTROY(mutex_mol);
 
-    UN_MAP(sem_t, line_count);
+    UN_MAP(sem_t, mutex_line);
     UN_MAP(sem_t, oxy_start);
     UN_MAP(sem_t, oxy_end);
     UN_MAP(sem_t, hydro_start);
     UN_MAP(sem_t, hydro_end);
-    UN_MAP(sem_t, mol_inc);
+    UN_MAP(sem_t, mutex_mol);
 
     if(err) {
         perror("cleanup\n");
@@ -212,13 +212,31 @@ void cleanup() {
     }
 }
 
-void mol_start() {
-    sem_wait(mol_inc);
+void mol_inc() {
+    sem_wait(mutex_mol);
     (*noM)++;
-    sem_post(mol_inc);
+    sem_post(mutex_mol);
 }
 
 int mol_count(int O, int H) {
     if(2*O > H) return H/2;
     else return O;
+}
+
+void release() {
+
+
+    int excess_oxy = *NO - *noM;
+    int excess_hydro = *NH - 2*(*noM);
+
+    mol_start();
+
+    for(int i = 0; i < excess_oxy; i++) {
+        sem_post(oxy_start);
+    }
+
+    for(int i = 0; i < excess_hydro; i++) {
+        sem_post(hydro_start);
+    }
+
 }
