@@ -28,9 +28,6 @@ int main(int argc, char* argv[]) {
 
     *mols = mol_count(*NO, *NH);
 
-    // create_oxygen(*NO);
-    // create_hydrogen(*NH);
-
     create(*NO, oxygen);        //Test for H
     create(*NH, hydrogen);
 

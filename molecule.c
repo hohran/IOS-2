@@ -83,40 +83,6 @@ void print_report(const char *mess, ...) {
 
 }
 
-
-
-// void create_oxygen(int num) {
-
-//     for(int i = 1; i <= num; i++) {
-
-//         pid_t id = fork();
-//         if(id == 0) {
-//             oxygen(i);
-//         }
-//         if(id == -1) {
-//             perror("create_oxygen");
-//             exit(1);
-//         }
-//     }
-// }
-
-
-
-// void create_hydrogen(int num) {
-
-//     for(int i = 1; i <= num; i++) {
-
-//         pid_t id = fork();
-//         if(id == 0) {
-//             hydrogen(i);
-//         }
-//         if(id == -1) {
-//             perror("create_hydrogen");
-//             exit(1);
-//         }
-//     }
-// }
-
 void create(int num, void (*process)(id_t elem)) {
     
     for(int i = 1; i <= num; i++) {
