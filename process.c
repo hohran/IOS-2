@@ -18,8 +18,6 @@ int main(int argc, char* argv[]) {
         cleanup();
         exit(1);
     }
-
-    *A = 0;
     
     if(load_args(argc, argv)) {
         cleanup();
@@ -83,8 +81,6 @@ void oxygen(id_t idO) {
 
     sem_post(oxy_end);
 
-
-
     exit(0);
 }       //Proces kyslíku
 
@@ -109,9 +105,6 @@ void hydrogen(id_t idH) {
     print_report("H %d: Molecule %d created\n", idH, *noM);
 
     sem_post(hydro_end);
-
-
-
 
     exit(0);
 }       //Proces vodíku
