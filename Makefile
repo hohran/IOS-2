@@ -5,14 +5,12 @@
 
 CC = gcc
 CFLAGS = -std=gnu99 -Wall -Wextra -Werror -pedantic
-LDFLAGS =
 EXEC = proj2
-OBJ = objFiles
 
 all: $(EXEC)
 
 proj2: process.o molecule.o
-	$(CC) -pthread $^ -o $@ $(LDFLAGS)
+	$(CC) -pthread $^ -o $@
 
 %.o: %.c molecule.h
 	$(CC) -c $(CFLAGS) $<
